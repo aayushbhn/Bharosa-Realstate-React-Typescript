@@ -59,6 +59,9 @@ Before setting up the project, ensure you have the following software installed 
 | **PostgreSQL Client** (pgAdmin/DBeaver) | Database management GUI |
 | **Postman/Thunder Client** | API testing |
 
+
+
+
 ## Quick Start (Windows / PowerShell)
 
 ```powershell
@@ -104,12 +107,35 @@ pnpm start
 
 ## Frontend Setup
 
-To start the frontend application:
+### Prerequisites
+- Node.js 18.x or higher (already installed from prerequisites)
+- pnpm (already installed from prerequisites)
+- Backend server running (see Backend Setup above)
 
-```powershell
-cd bharosa-frontend-nextjs/bharosa-frontend
-npm run dev
-```
+### Setup Instructions
+
+#### 1. Navigate to Frontend Directoryershell
+cd bharosa-frontend-nextjs/bharosa-frontend#### 2. Install Dependenciesell
+pnpm install#### 3. Create Environment File
+Create a `.env.local` file in the frontend directory:hell
+# Copy from example if exists, or create new file
+copy .env.example .env.localIf the file doesn't exist, create `.env.local` with:
+NEXT_PUBLIC_API_BASE=http://localhost:4000
+NEXT_PUBLIC_USE_MOCK=false**Environment Variables:**
+- `NEXT_PUBLIC_API_BASE`: Backend API URL (default: `http://localhost:4000`)
+- `NEXT_PUBLIC_USE_MOCK`: Set to `true` to use mock data, `false` to connect to backend API
+
+#### 4. Start Frontend Development Server
+pnpm devThe frontend will start on `http://localhost:3000`
+
+### Frontend Development Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server (port 3000) |
+| `pnpm build` | Build for production |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
 
 ## API Endpoints
 
