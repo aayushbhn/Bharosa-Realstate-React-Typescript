@@ -2,6 +2,63 @@
 
 A pragmatic API for Bharosa Real Estate with users/agents, properties, leads, visits (ICS), deals, and a simple recommender.
 
+
+## To Install (Windows / PowerShell)
+
+
+## Prerequisites
+
+Before setting up the project, ensure you have the following software installed on your system:
+
+### Required Software
+
+| Software | Version | Download Link | Purpose |
+|----------|---------|---------------|---------|
+| **Node.js** | 18.x or higher | [nodejs.org](https://nodejs.org/) | JavaScript runtime for backend and frontend |
+| **pnpm** | Latest | `npm install -g pnpm` | Package manager (alternative to npm) |
+| **Docker Desktop** | Latest | [docker.com](https://www.docker.com/products/docker-desktop) | Containerization for PostgreSQL, Redis, and Mailhog |
+| **Git** | Latest | [git-scm.com](https://git-scm.com/) | Version control |
+
+### Installation Instructions (Windows)
+- You can install all the softwares in your own way that you feel easy, not required to follow each steps.
+
+#### 1. Install Node.js
+- Download the LTS version from [nodejs.org](https://nodejs.org/)
+- Run the installer and follow the setup wizard
+- Verify installation:
+  
+  node --version
+  npm --version
+  #### 2. Install pnpm
+- Open PowerShell and run:
+  
+  npm install -g pnpm
+  - Verify installation:l
+  pnpm --version
+  
+#### 3. Install Docker Desktop
+- Download Docker Desktop for Windows from [docker.com](https://www.docker.com/products/docker-desktop)
+- Install and restart your computer if prompted
+- Start Docker Desktop and ensure it's running
+- Verify installation:ershell
+  docker --version
+  docker compose version
+
+  #### 4. Install Git
+- Download Git for Windows from [git-scm.com](https://git-scm.com/)
+- Run the installer (default settings are fine)
+- Verify installation:ell
+  git --version
+
+  ### Optional Software (Recommended)
+- Postman
+
+| Software | Purpose |
+|----------|---------|
+| **VS Code** | Code editor with TypeScript support |
+| **PostgreSQL Client** (pgAdmin/DBeaver) | Database management GUI |
+| **Postman/Thunder Client** | API testing |
+
 ## Quick Start (Windows / PowerShell)
 
 ```powershell
