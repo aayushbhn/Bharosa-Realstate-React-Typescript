@@ -10,9 +10,10 @@ const r = Router();
 
 /**
  * Create a lead
+ * Only customers can create leads
  * Accepts either:
- *  - { customerId, propertyId, notes? }
- *  - { name, email, phone?, propertyId, notes? }  // creates or reuses a 'customer' user
+ *  - { customerId, propertyId, notes? }  // for logged-in customers
+ *  - { name, email, phone?, propertyId, notes? }  // for public (creates or reuses a 'customer' user)
  */
 r.post('/', async (req, res) => {
   const { customerId, name, email, phone, propertyId, notes } = req.body as any;
@@ -25,8 +26,18 @@ r.post('/', async (req, res) => {
 
   if (customerId) {
     customer = await userRepo.findOne({ where: { id: customerId } });
+    // Verify the user is a customer
+    if (customer && customer.role !== 'customer') {
+      return res.status(403).json({ error: 'Only customers can create leads' });
+    }
   } else if (email) {
     customer = await userRepo.findOne({ where: { email } });
+    // If user exists but is not a customer, don't allow lead creation
+    if (customer && customer.role !== 'customer') {
+      return res.status(403).json({ 
+        error: 'Only customers can create leads. Please login with a customer account.' 
+      });
+    }
     if (!customer) {
       customer = userRepo.create({
         email,
@@ -47,23 +58,11 @@ r.post('/', async (req, res) => {
 
   const lead = leadRepo.create({ customer, property, notes, stage: 'new' });
   await leadRepo.save(lead);
-  // after await leadRepo.save(lead);
+  
   req.app.get('io')?.to(`agent:${property.agent?.user?.id}`).emit('lead:new', { id: lead.id });
 
   res.json(lead);
 });
-
-r.patch('/:id/stage', async (req, res) => {
-  const repo = AppDataSource.getRepository(Lead);
-  const lead = await repo.findOne({ where: { id: req.params.id } });
-  if (!lead) return res.status(404).json({ error: 'Not found' });
-  lead.stage = req.body.stage;
-  lead.notes = req.body.notes;
-  await repo.save(lead);
-  res.json(lead);
-});
-
-/* existing POST / and PATCH /:id/stage ... keep them */
 
 /** Secure stage changes to agents/admins only */
 r.patch('/:id/stage', auth, roleGuard(['agent','agency_admin','super_admin']), async (req, res) => {
