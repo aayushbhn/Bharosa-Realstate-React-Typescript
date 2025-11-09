@@ -115,8 +115,10 @@ pnpm start
 ### Setup Instructions
 
 #### 1. Navigate to Frontend Directoryershell
-cd bharosa-frontend-nextjs/bharosa-frontend#### 2. Install Dependenciesell
-pnpm install#### 3. Create Environment File
+cd bharosa-frontend-nextjs/bharosa-frontend#### 
+2. Install Dependenciesell
+pnpm install#### 
+3. Create Environment File
 Create a `.env.local` file in the frontend directory:hell
 # Copy from example if exists, or create new file
 copy .env.example .env.localIf the file doesn't exist, create `.env.local` with:
