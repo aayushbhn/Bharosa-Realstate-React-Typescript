@@ -63,7 +63,7 @@ export default function Home() {
           />
         </div>
         {isAdmin && (
-          <div className="mt-8">
+          <div className="grid sm:grid-cols-1 ">
             <h2 className="text-2xl font-bold mb-4 text-gray-900">Admin Functions</h2>
             <DashboardCard
               href="/admin"
