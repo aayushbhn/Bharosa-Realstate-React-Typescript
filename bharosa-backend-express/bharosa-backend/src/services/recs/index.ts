@@ -9,13 +9,14 @@ import { rerank } from "./ranker";
 export async function userHistoryVectors(userId: string) {
   // Build vectors from user's saved properties (and/or recent interactions)
   const rows = await AppDataSource.getRepository(Property)
-    .createQueryBuilder("p")
-    .innerJoin("saved_property", "sp", "sp.propertyId = p.id")
-    .where("sp.userId = :uid", { uid: userId })
-    .andWhere("p.isApproved = true")
-    .orderBy("p.createdAt","DESC")
-    .limit(100)
-    .getMany();
+  .createQueryBuilder("p")
+  .innerJoin("saved_property", "sp", `sp."propertyId" = p.id`)
+  .where(`sp."userId" = :uid`, { uid: userId })
+  .andWhere("p.isApproved = true")
+  .orderBy("p.createdAt", "DESC")
+  .limit(100)
+  .getMany();
+
 
   return rows.map(p => encodeProperty(p as any));
 }
@@ -44,9 +45,14 @@ export async function recommendForUser(userId: string, opts: { limit?: number; s
   // 1) collaborative candidates from history
   // collect seeds = last N saved props → co-occur
   const saved = await AppDataSource.query(
-    `SELECT sp.propertyId AS id FROM saved_property sp WHERE sp.userId=$1 ORDER BY sp.createdAt DESC LIMIT 20`,
+    `SELECT sp."propertyId" AS id
+     FROM saved_property sp
+     WHERE sp."userId" = $1
+     ORDER BY sp."savedAt" DESC
+     LIMIT 20`,
     [userId]
   );
+  
   const seedIds: string[] = saved.map((r:any)=> r.id);
 
   let cfIds: string[] = [];

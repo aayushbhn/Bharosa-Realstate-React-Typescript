@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getProperty, getSimilar } from "@/lib/api";
+import { getProperty, getSimilar, getImageUrl } from "@/lib/api";
 import { Property } from "@/lib/types";
 import ListingCard from "@/components/ListingCard";
 import Modal from "@/components/Modal";
@@ -46,7 +46,7 @@ export default function PropertyPage() {
   const saved = isSaved.has(p.id);
   const prefill = `Hi, I'm interested in ${p.title} (${p.id}).`;
   const wa = `https://wa.me/9779812345678?text=${encodeURIComponent(prefill)}`;
-  const img = p.imageUrls?.[0];
+  const img = getImageUrl(p.imageUrls?.[0]);  // 👈 use helper
 
   return (
     <>
@@ -73,7 +73,7 @@ export default function PropertyPage() {
         <div
           className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl overflow-hidden shadow-lg"
           style={{
-            backgroundImage: img ? `url(${img})` : undefined,
+            backgroundImage: img ? `url("${img}")` : undefined,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

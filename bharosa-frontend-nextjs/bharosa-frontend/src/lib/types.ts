@@ -3,19 +3,35 @@ export type PropertyType = "apartment" | "house" | "land" | "office" | "villa";
 
 export interface Property {
   id: string;
+
   title: string;
   description: string;
+
   status: PropertyStatus;
-  type: PropertyType;
+  type: PropertyType | string;        // backend is plain string, keep union for safety
+
   beds: number;
   baths: number;
-  areaSqft: number;
+  areaSqft?: number | null;          // optional in form
+
   price: number;
   city?: string;
   area?: string;
+
   imageUrls?: string[];
+
+  // 👉 New fields used in PropertyForm
+  amenities?: string[];              // comma-separated in UI, array in model
+  furnishing?: "" | "furnished" | "semi" | "unfurnished";
+
+  /** ISO date string from API or null */
+  possessionDate?: string | null;
+
+  lat?: number | null;
+  lng?: number | null;
+
   createdAt?: string;
-  isApproved?: boolean; 
+  isApproved?: boolean;
 }
 
 export interface AgentProfile {

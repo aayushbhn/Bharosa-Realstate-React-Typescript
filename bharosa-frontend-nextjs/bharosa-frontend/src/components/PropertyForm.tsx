@@ -58,13 +58,19 @@ export default function PropertyForm({
         <input className="border rounded-xl px-3 py-2" placeholder="Amenities (comma separated)"
           value={(form.amenities || []).join(", ")}
           onChange={e=>set("amenities", e.target.value.split(",").map(s=>s.trim()).filter(Boolean) as any)} />
-        <select className="border rounded-xl px-3 py-2" value={form.furnishing || ""}
-          onChange={e=>set("furnishing", e.target.value)}>
+        <select
+          className="border rounded-xl px-3 py-2"
+          value={form.furnishing || ""}
+          onChange={(e) =>
+            set("furnishing", e.target.value as Property["furnishing"])
+          }
+        >
           <option value="">Furnishing</option>
           <option value="furnished">Furnished</option>
           <option value="semi">Semi-furnished</option>
           <option value="unfurnished">Unfurnished</option>
         </select>
+
         <input className="border rounded-xl px-3 py-2" type="date" placeholder="Possession date"
           value={form.possessionDate ? String(form.possessionDate).slice(0,10) : ""}
           onChange={e=>set("possessionDate", e.target.value as any)} />

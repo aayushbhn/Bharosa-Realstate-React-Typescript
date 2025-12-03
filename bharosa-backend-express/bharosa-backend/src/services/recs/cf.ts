@@ -9,30 +9,31 @@ export async function itemSimilarByCooccurrence(propertyId: string, limit = 20):
   // Uses saved_properties and interactions tables if you have both; using saved as primary.
   const q = `
   WITH u AS (
-    SELECT sp.userId
+    SELECT sp."userId"
     FROM saved_property sp
-    WHERE sp.propertyId = $1
+    WHERE sp."propertyId" = $1
   ),
   co AS (
-    SELECT sp.propertyId AS other_id, COUNT(*) AS cnt
+    SELECT sp."propertyId" AS other_id, COUNT(*) AS cnt
     FROM saved_property sp
-    JOIN u ON u.userId = sp.userId
-    WHERE sp.propertyId <> $1
-    GROUP BY sp.propertyId
+    JOIN u ON u."userId" = sp."userId"
+    WHERE sp."propertyId" <> $1
+    GROUP BY sp."propertyId"
   ),
   norms AS (
-    SELECT sp.propertyId, COUNT(*) AS n
+    SELECT sp."propertyId", COUNT(*) AS n
     FROM saved_property sp
-    GROUP BY sp.propertyId
+    GROUP BY sp."propertyId"
   )
   SELECT co.other_id AS id,
          (co.cnt::float / GREATEST(1,SQRT(n1.n) * SQRT(n2.n))) AS score
   FROM co
-  JOIN norms n1 ON n1.propertyId = $1
-  JOIN norms n2 ON n2.propertyId = co.other_id
+  JOIN norms n1 ON n1."propertyId" = $1
+  JOIN norms n2 ON n2."propertyId" = co.other_id
   ORDER BY score DESC
   LIMIT $2;
-  `;
+`;
+
   const rows = await AppDataSource.query(q, [propertyId, limit]);
   return rows.map((r:any)=>({ id: r.id, score: Number(r.score)}));
 }

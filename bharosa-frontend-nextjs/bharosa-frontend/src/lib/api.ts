@@ -5,6 +5,23 @@ import { getMock, listMock, similarMock } from "./mock";
 const BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
 const USE_MOCK = String(process.env.NEXT_PUBLIC_USE_MOCK ?? "true").toLowerCase() === "true";
 
+// 👇 Add this helper
+export function getImageUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+
+  // Already absolute
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  // Starts with /uploads/...
+  if (url.startsWith("/")) {
+    return `${BASE}${url}`;
+  }
+
+  // Fallback: bare filename -> assume uploads
+  return `${BASE}/uploads/${url}`;
+}
 
 
 

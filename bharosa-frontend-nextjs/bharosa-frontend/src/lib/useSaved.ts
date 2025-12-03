@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { fetchSaved, saveProperty, unsaveProperty, getProperty, type Property } from "./api";
+import { fetchSaved, saveProperty, unsaveProperty, getProperty } from "./api";
+import type { Property } from "./types";
+
 
 export function useSaved() {
   const [loading, setLoading] = useState(true);

@@ -1,8 +1,12 @@
 "use client";
-import { useAuth } from "@/lib/auth";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth";
 import HomeSearch from "@/components/HomeSearch";
 import LandingPage from "@/components/LandingPage";
+import ListingCard from "@/components/ListingCard";
+import { recsHome } from "@/lib/api";
+import type { Property } from "@/lib/types";
 
 export default function Home() {
   const { user, ready } = useAuth();
@@ -108,19 +112,9 @@ export default function Home() {
     );
   }
 
-  // Customer view - Property search
+  // Customer view - Property search + Recommendations
   if (isCustomer) {
-    return (
-      <div className="space-y-8 animate-fade-in">
-        <div className="space-y-3">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-            Find Your Dream Property
-          </h1>
-          <p className="text-xl text-gray-600">Browse through our curated selection of properties</p>
-        </div>
-        <HomeSearch />
-      </div>
-    );
+    return <CustomerHome />;
   }
 
   // Fallback
@@ -153,5 +147,57 @@ function DashboardCard({
       </h3>
       <p className="text-sm text-gray-600">{description}</p>
     </Link>
+  );
+}
+
+function CustomerHome() {
+  const [recs, setRecs] = useState<Property[] | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await recsHome(); // personalized if logged-in (token in axios)
+        setRecs(data);
+      } catch (err) {
+        console.error("Failed to load recommendations", err);
+        setRecs([]);
+      }
+    })();
+  }, []);
+
+  return (
+    <div className="space-y-10 animate-fade-in">
+      <div className="space-y-3">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+          Find Your Dream Property
+        </h1>
+        <p className="text-xl text-gray-600">
+          Browse through our curated selection of properties
+        </p>
+      </div>
+
+      {/* Search section */}
+      <HomeSearch />
+
+      {/* Recommended section */}
+      {recs === null ? (
+        <div className="flex items-center justify-center py-10 text-gray-500">
+          Loading recommendations…
+        </div>
+      ) : recs.length === 0 ? null : (
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Recommended for you
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recs.map((p) => (
+              <ListingCard key={p.id} p={p} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
   );
 }
